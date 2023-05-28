@@ -5,6 +5,7 @@ description = "Hardware setup and calibration"
 authors = ["Alessandro Candido <candido.ale@gmail.com>"]
 license = "LICENSE"
 readme = "README.md"
+packages = [{ include = "qibodb", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
