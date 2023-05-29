@@ -26,7 +26,7 @@ def podman_exe():
 
 def podman(command: str):
     args = [podman_exe()] + command.split(" ")
-    _logger.warn(" ".join(args))
+    _logger.info(" ".join(args))
     subprocess.run(args)
 
 
