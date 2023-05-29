@@ -8,7 +8,9 @@ with `pymongo` package).
 be used in its place (e.g. `docker`, that is CLI-compatible with `podman`, so
 it is only needed to change the base command).
 
-## Pull the official image
+## Install and create DB
+
+### Pull the official image
 
 ```sh
 podman pull docker://mongo
@@ -17,20 +19,21 @@ podman pull docker://mongo
 podman images
 ```
 
-## Instantiate the container
+### Instantiate the container
 
 ```sh
 # make sure the external directory exists
-mkdir -p /var/lib/qibodb/data
-chown -R <my-user> /var/lib/qibodb
+mkdir data
+# and move ownership to a container user
+podman unshare chown 1000:1000 $(realpath data)
 
 # create the container
-podman run --name qibodb -p 27017:9160 -v /var/lib/qibodb/data:/data/db docker.io/library/mongo:latest
+podman run -dt --name qibodb -p 27017:9160 -v $(realpath data):/data/db:Z,U docker.io/library/mongo:latest
 ```
 
 https://www.redhat.com/sysadmin/debug-rootless-podman-mounted-volumes
 
-## Jump into the database
+### Jump into the database
 
 Mongo has a management shell, named `mongosh`, to enter it in the container just
 run:
