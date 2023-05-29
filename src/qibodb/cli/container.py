@@ -3,6 +3,10 @@ import logging
 import shutil
 import subprocess
 
+import click
+
+from .base import command, path
+
 _logger = logging.getLogger(__name__)
 
 MONGOPORT = 27017
@@ -52,3 +56,27 @@ def startdb():
 
 def stopdb():
     podman(f"stop {CONTAINER}")
+
+
+@command.group("container")
+def container():
+    """Container management utilities."""
+
+
+@container.command("init")
+@click.argument("data", type=path(file_okay=False))
+def init(data: Path):
+    """Initialize new container with a MongoDB instance."""
+    initdb(data)
+
+
+@container.command("start")
+def start():
+    """Start the container."""
+    startdb()
+
+
+@container.command("stop")
+def stop():
+    """Stop the container."""
+    stopdb()
