@@ -28,7 +28,7 @@ mkdir data
 podman unshare chown 1000:1000 $(realpath data)
 
 # create the container
-podman run -dt --name qibodb -p 27017:9160 -v $(realpath data):/data/db:Z,U docker.io/library/mongo:latest
+podman run -dt --name qibodb -p 9160:27017 -v $(realpath data):/data/db:Z,U docker.io/library/mongo:latest
 ```
 
 https://www.redhat.com/sysadmin/debug-rootless-podman-mounted-volumes
