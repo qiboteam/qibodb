@@ -58,25 +58,25 @@ def stopdb():
     podman(f"stop {CONTAINER}")
 
 
-@command.group("container")
-def container():
-    """Container management utilities."""
+@command.group("server")
+def server():
+    """Server management utilities."""
 
 
-@container.command("init")
+@server.command("init")
 @click.argument("data", type=path(file_okay=False))
 def init(data: Path):
-    """Initialize new container with a MongoDB instance."""
+    """Initialize new container with a MongoDB server."""
     initdb(data)
 
 
-@container.command("start")
+@server.command("start")
 def start():
-    """Start the container."""
+    """Start the server."""
     startdb()
 
 
-@container.command("stop")
+@server.command("stop")
 def stop():
-    """Stop the container."""
+    """Stop the server."""
     stopdb()
