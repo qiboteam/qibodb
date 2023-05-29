@@ -9,8 +9,7 @@ packages = [{ include = "qibodb", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-SQLAlchemy = "^2.0.15"
-pandas = "^2.0.1"
+pymongo = "^4.3.3"
 click = { version = "^8.1.3", optional = true }
 rich = { version = "^13.3.5", optional = true }
 
@@ -19,6 +18,12 @@ cli = ["click", "rich"]
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.13.2"
+
+[tool.poetry.scripts]
+qibodb = "qibodb.cli:command"
+
+[tool.poe.tasks]
+ipy = "ipython"
 
 [build-system]
 requires = ["poetry-core"]
