@@ -42,6 +42,16 @@ run:
 podman exec -it qibodb mongosh
 ```
 
+## Add GUI
+
+Compass is a MongoDB GUI that can be used to explore the DB.
+
+Installations instructions are on the [official
+page](https://www.mongodb.com/docs/compass/).
+
+When you open it, just remember to replace the default port with the QIBO port
+(i.e. 9160).
+
 ## Acknowledgments
 
 Partially inspired by https://mehmetozanguven.com/run-mongodb-with-podman/
