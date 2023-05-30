@@ -8,6 +8,9 @@ def insert(documents: list[dict], db: Database, coll: Collection, client: MongoC
     # Validate the documents
     objs = [coll.value(**doc) for doc in documents]
 
+    print(documents)
+    print(objs)
+    return
     inserted = client[db.name][coll.name].insert_many(documents)
 
     # TODO: return a *read* object

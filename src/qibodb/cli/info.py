@@ -1,4 +1,4 @@
-"""Info."""
+"""Report DB information."""
 import rich
 import rich.box
 import rich.padding
@@ -15,6 +15,7 @@ def info():
 
 @info.command("settings")
 def settings_():
+    """Report resolved settings."""
     table = Table(title="QiboDB settings", box=rich.box.HORIZONTALS)
     table.add_column("Name", style="magenta")
     table.add_column("Resolved value", style="cyan", justify="center")
