@@ -6,14 +6,9 @@ import subprocess
 import click
 
 from .base import command, path
+from .settings import settings
 
 _logger = logging.getLogger(__name__)
-
-MONGOPORT = 27017
-QIBOPORT = 9160
-
-CONTAINER = "qibodb"
-IMAGE = "docker.io/library/mongo:latest"
 
 
 def podman_exe():
@@ -45,19 +40,26 @@ def initdb(data: Path):
         podman(f"unshare rm -rf {data}")
     data.mkdir()
 
+    container = settings.container_name
+    image = settings.container_image
+    qibo_port = settings.qibo_port
+    mongo_port = settings.mongo_port
+
     podman(f"unshare chown 1000:1000 {data}")
-    name = f"--name {CONTAINER}"
-    port = f"-p {QIBOPORT}:{MONGOPORT}"
+    name = f"--name {container}"
+    port = f"-p {qibo_port}:{mongo_port}"
     volume = f"-v {data}:/data/db:Z,U"
-    podman(f"run -dt {name} {port} {volume} {IMAGE}")
+    podman(f"run -dt {name} {port} {volume} {image}")
 
 
 def startdb():
-    podman(f"start {CONTAINER}")
+    container = settings.container_name
+    podman(f"start {container}")
 
 
 def stopdb():
-    podman(f"stop {CONTAINER}")
+    container = settings.container_name
+    podman(f"stop {container}")
 
 
 @command.group("server")
