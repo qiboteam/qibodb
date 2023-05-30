@@ -1,4 +1,4 @@
-"""Define database content."""
+"""Platform supporting hardware execution."""
 from enum import Enum
 
 from .qpu import QPU, QPUCalibration

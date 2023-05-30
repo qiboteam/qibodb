@@ -1,3 +1,7 @@
-from . import platform, procedure
+from enum import Enum
 
-DBS = {platform.DB, procedure.DB}
+from . import platform, calibration
+
+class Database(Enum):
+    platform = platform.Collection
+    procedure = calibration.Collection
