@@ -1,9 +1,10 @@
 """Instruments specs and calibrations."""
+from ..models import InsertModel
 
 
-class Instrument:
+class Instrument(InsertModel):
     pass
 
 
-class InstrumentCalibration:
+class InstrumentCalibration(InsertModel):
     pass

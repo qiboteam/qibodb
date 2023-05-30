@@ -1,6 +1,6 @@
 """QPU specs and calibration."""
 from enum import Enum
-from typing import Optional, Union
+from typing import Union
 
 from ..models import InsertModel
 
@@ -21,6 +21,6 @@ class QPU(InsertModel):
     resonator_type: ResonatorType
 
 
-class QPUCalibration:
+class QPUCalibration(InsertModel):
     sampling_rate: int
     repetition_duration: int
