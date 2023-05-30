@@ -1,5 +1,6 @@
 """Track Qibocal versions."""
+from pydantic import BaseModel
 
 
-class Qibocal:
-    pass
+class Qibocal(BaseModel):
+    version: str

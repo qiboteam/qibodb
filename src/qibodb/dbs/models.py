@@ -1,4 +1,4 @@
-""""""
+"""Base models and dynamic tools."""
 import inspect
 from datetime import datetime
 from typing import NewType, Optional, Type

@@ -6,7 +6,7 @@ from .dbs import Database, Collection
 
 def insert(documents: list[dict], db: Database, coll: Collection, client: MongoClient):
     # Validate the documents
-    objs = [coll.value(doc) for doc in documents]
+    objs = [coll.value(**doc) for doc in documents]
 
     inserted = client[db.name][coll.name].insert_many(documents)
 
