@@ -3,23 +3,12 @@ from pymongo import MongoClient
 
 from .dbs import Database, Collection
 
-def collection(name: str) -> tuple[Database, Collection]:
-    """Infer collection from name.
 
-    For example::
+def insert(documents: list[dict], db: Database, coll: Collection, client: MongoClient):
+    # Validate the documents
+    objs = [coll.value(doc) for doc in documents]
 
-        >>> collection("platform_qpu")
-        (Database.platform, platform.Collection.qpu)
+    inserted = client[db.name][coll.name].insert_many(documents)
 
-    """
-    dbname, collection = name.split("_")
-    db = Database[dbname]
-
-    return (db, db.value[collection])
-
-def insert(document: dict, db: Database, collection: Collection, client: MongoClient):
-    obj = collection.value(document)
-
-    client[db.name][collection.name].insert_one(document)
-
-    return obj
+    # TODO: return a *read* object
+    return objs, inserted.inserted_ids
