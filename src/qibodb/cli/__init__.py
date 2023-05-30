@@ -1,3 +1,3 @@
 """Qibodb CLI."""
-from . import container, log
+from . import server, log
 from .base import command

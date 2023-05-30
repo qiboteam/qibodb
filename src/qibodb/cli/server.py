@@ -38,8 +38,10 @@ def initdb(data: Path):
 
     """
     try:
-        shutil.rmtree(data, ignore_errors=True)
-    except PermissionError:
+        shutil.rmtree(data)
+    except OSError as err:
+        if not isinstance(err, PermissionError):
+            raise err
         podman(f"unshare rm -rf {data}")
     data.mkdir()
 
