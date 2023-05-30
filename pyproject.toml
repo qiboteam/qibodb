@@ -25,6 +25,7 @@ optional = true
 
 [tool.poetry.group.analysis.dependencies]
 mypy = "^1.3.0"
+pylint = "^2.17.4"
 
 [tool.poetry.scripts]
 qibodb = "qibodb.cli:command"
