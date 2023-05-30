@@ -1,7 +1,10 @@
+"""Establish QiboDB settings."""
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Set defaults, resolve the environment."""
+
     mongo_port = 27017
     qibo_port = 9160
 
@@ -13,3 +16,11 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+"""Global settings instance (CLI runs are one-shot)."""
+
+
+def vars(settings: Settings):
+    return {
+        f"{settings.Config.env_prefix}{k}".upper(): v
+        for k, v in settings.dict().items()
+    }
