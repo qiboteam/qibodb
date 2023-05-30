@@ -1,5 +1,3 @@
 """Define database content."""
 
-
-class Platform:
-    pass
+DB = "platforms"
