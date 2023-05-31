@@ -38,6 +38,4 @@ def insert_coll(paths: list[Path], db: Database, coll: Collection, client: Mongo
     results = client[db.name][coll.name].insert_many(docs)
 
     readcls = read_model(coll.value)
-    print(results.inserted_ids)
-    print(docs)
     return [readcls(id=id_, **doc) for id_, doc in zip(results.inserted_ids, docs)]

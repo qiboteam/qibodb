@@ -1,4 +1,4 @@
-"""Insert document"""
+"""Insert document."""
 from pathlib import Path
 
 import click
@@ -12,7 +12,7 @@ from ..insert import insert
 
 @command.command("insert")
 @click.argument("docs", nargs=-1, type=path(exists=True, dir_okay=False))
-@click.option("--in", "in_")
+@click.option("--in", "in_", required=True)
 def insert_(docs: list[Path], in_: str):
     db, coll = collection(in_)
 
