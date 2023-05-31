@@ -2,7 +2,7 @@ from enum import Enum
 from itertools import chain
 from typing import Optional, Union
 
-from . import platform, calibration
+from . import calibration, platform
 
 
 class Database(Enum):
@@ -23,6 +23,7 @@ class Database(Enum):
 
 
 Collection = Union[platform.Collection, calibration.Collection]
+"""A collection from one of the available databases."""
 
 
 def identifier(db: Database, coll: Optional[Collection] = None) -> str:
