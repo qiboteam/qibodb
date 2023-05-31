@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import NewType, Optional, Type
 
 from pydantic import BaseModel, Field, create_model
+from bson import ObjectId
 
 
 class InsertModel(BaseModel):
@@ -34,9 +35,25 @@ def update_model(insert_model: Type[InsertModel]) -> Type[UpdateModel]:
     return model
 
 
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+
 def read_model(insert_model: Type[InsertModel]) -> Type[ReadModel]:
     fields = {
-        "id": (int, ...),
+        "id": (PyObjectId, ...),
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
     }
     config = insert_model.Config
