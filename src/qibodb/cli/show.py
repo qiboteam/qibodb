@@ -1,7 +1,7 @@
 """Retrieve document."""
 
 import click
-from rich.pretty import pprint
+from rich import print_json
 
 from ..conversion import documents
 from ..dbs import collection
@@ -16,4 +16,4 @@ from .settings import client
 def show(ids: list[str], in_: str):
     db, coll = collection(in_)
 
-    pprint(documents(get(ids, db, coll, client())), indent_guides=False)
+    print_json(data=documents(get(ids, db, coll, client())))

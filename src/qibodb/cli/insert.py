@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import click
-from rich.pretty import pprint
+from rich import print_json
 
 from ..conversion import documents
 from ..dbs import collection
@@ -17,4 +17,4 @@ from .settings import client
 def insert_(docs: list[Path], in_: str):
     db, coll = collection(in_)
 
-    pprint(documents(insert(docs, db, coll, client())), indent_guides=False)
+    print_json(data=documents(insert(docs, db, coll, client())))
