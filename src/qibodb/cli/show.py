@@ -7,6 +7,7 @@ from .base import command
 from .settings import client
 from ..dbs import collection
 from ..get import get
+from ..insert import documents
 
 
 @command.command("show")
@@ -15,4 +16,4 @@ from ..get import get
 def show(ids: list[str], in_: str):
     db, coll = collection(in_)
 
-    pprint(get(ids, db, coll, client()))
+    pprint(documents(get(ids, db, coll, client())))

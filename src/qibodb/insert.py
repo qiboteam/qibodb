@@ -6,9 +6,8 @@ from typing import Optional
 from pydantic import BaseModel
 from pymongo import MongoClient
 
-from qibodb.dbs.models import read_model
-
 from .dbs import Database, Collection
+from .dbs.models import read_model
 
 
 def insert(
@@ -35,7 +34,7 @@ def insert_coll(paths: list[Path], db: Database, coll: Collection, client: Mongo
     docs = documents(objs)
 
     # actually insert
-    results = client[db.name][coll.name].insert_many(docs)
+    _ = client[db.name][coll.name].insert_many(docs)
 
     readcls = read_model(coll.value)
-    return [readcls(id=id_, **doc) for id_, doc in zip(results.inserted_ids, docs)]
+    return [readcls(**doc) for doc in docs]

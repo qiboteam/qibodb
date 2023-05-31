@@ -53,7 +53,7 @@ class PyObjectId(ObjectId):
 
 def read_model(insert_model: Type[InsertModel]) -> Type[ReadModel]:
     fields = {
-        "id": (PyObjectId, ...),
+        "_id": (PyObjectId, ...),
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
     }
     config = insert_model.Config
