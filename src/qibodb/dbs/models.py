@@ -29,7 +29,7 @@ def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
         name,
         **fields,
         __config__=config,
-        __base__=BaseModel,
+        __base__=None,
         __module__=__name__,
         __validators__={},
         __cls_kwargs__={},
