@@ -33,7 +33,13 @@ qibodb = "qibodb.cli:command"
 
 [tool.poe.tasks]
 ipy = "ipython"
+lint = "pylint src --errors-only"
+lint-warnings = "pylint src --exit-zero"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.'MESSAGES CONTROL']
+# whitelist pydantic, because compiled with Cython
+extension-pkg-whitelist = "pydantic"
