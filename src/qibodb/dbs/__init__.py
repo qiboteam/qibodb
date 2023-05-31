@@ -1,6 +1,6 @@
 from enum import Enum
 from itertools import chain
-from typing import Union
+from typing import Optional, Union
 
 from . import platform, calibration
 
@@ -21,20 +21,31 @@ class Database(Enum):
 Collection = Union[platform.Collection, calibration.Collection]
 
 
-def identifier(db: Database, coll: Collection) -> str:
+def identifier(db: Database, coll: Optional[Collection] = None) -> str:
+    if coll is None:
+        return db.name
     return f"{db.name}.{coll.name}"
 
 
-def collection(identifier: str):
+def collection(identifier: str) -> tuple[Database, Optional[Collection]]:
     """Infer collection from name.
 
     For example::
 
-        >>> collection("platform_qpu")
+        >>> collection("platform.qpu")
         (Database.platform, platform.Collection.qpu)
 
     """
-    dbname, collection = identifier.split(".")
-    db = Database[dbname]
+    elems = identifier.split(".")
+    try:
+        dbname, collection = elems
+    except ValueError:
+        if len(elems) > 1:
+            raise ValueError
+        dbname = elems[0]
+        collection = None
 
-    return (db, db.value[collection])
+    db = Database[dbname]
+    coll = db.value[collection] if collection else None
+
+    return (db, coll)
