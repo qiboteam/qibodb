@@ -1,10 +1,10 @@
 """Convert among formats."""
 import json
+from typing import Optional, Type
 
 from pydantic import BaseModel
 
-from .dbs import Collection
-from .dbs.models import ReadModel, read_model
+from .dbs.models import InsertModel, ReadModel, read_model
 
 
 def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
@@ -12,10 +12,17 @@ def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
     return tuple(json.loads(obj.json()) for obj in objs)
 
 
-def read_models(docs: tuple[dict, ...], coll: Collection) -> tuple[ReadModel, ...]:
+def read_models(docs: tuple[Optional[dict], ...], model: Type[InsertModel]) -> tuple[Optional[ReadModel], ...]:
     """Convert database documents to read models."""
-    readcls = read_model(coll.value)
+    readcls = read_model(model)
+    objs: list[Optional[ReadModel]] = []
+
     for doc in docs:
+        if doc is None:
+            objs.append(doc)
+            continue
         doc["id"] = doc["_id"]
         del doc["_id"]
-    return tuple(readcls(**doc) for doc in docs)
+        objs.append(readcls(**doc))
+
+    return tuple(objs)

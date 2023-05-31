@@ -27,4 +27,4 @@ def insert_coll(paths: list[Path], db: Database, coll: Collection, client: Mongo
     # actually insert
     _ = client[db.name][coll.name].insert_many(docs)
 
-    return read_models(docs, coll)
+    return read_models(docs, coll.value)

@@ -20,5 +20,5 @@ def get_db(ids: list[str], db: Database, client: MongoClient):
 
 
 def get_coll(ids: list[str], db: Database, coll: Collection, client: MongoClient):
-    results = [client[db.name][coll.name].find_one({"_id": ObjectId(id)}) for id in ids]
-    return read_models(tuple(results), coll)
+    results: list[Optional[dict]] = [client[db.name][coll.name].find_one({"_id": ObjectId(id)}) for id in ids]
+    return read_models(tuple(results), coll.value)
