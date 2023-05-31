@@ -2,13 +2,13 @@ from enum import Enum
 from itertools import chain
 from typing import Optional, Union
 
-from . import calibration, platform
+from . import calibration, laboratory
 
 
 class Database(Enum):
     """Available databases."""
 
-    platform = platform.Collection
+    platform = laboratory.Collection
     procedure = calibration.Collection
 
     @classmethod
@@ -22,7 +22,7 @@ class Database(Enum):
         return [identifier(db, coll) for db, coll in cls.collections()]
 
 
-Collection = Union[platform.Collection, calibration.Collection]
+Collection = Union[laboratory.Collection, calibration.Collection]
 """A collection from one of the available databases."""
 
 

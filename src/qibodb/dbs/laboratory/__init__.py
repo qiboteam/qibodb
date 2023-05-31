@@ -1,9 +1,9 @@
 """Platform supporting hardware execution."""
 from enum import Enum
 
-from .qpu import QPU, QPUCalibration
 from .instrument import Instrument, InstrumentCalibration
 from .package import Qibolab
+from .qpu import QPU, QPUCalibration
 
 
 class Collection(Enum):
