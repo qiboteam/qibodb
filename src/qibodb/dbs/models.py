@@ -3,8 +3,8 @@ import inspect
 from datetime import datetime
 from typing import NewType, Optional, Type
 
-from pydantic import BaseModel, Field, create_model
 from bson import ObjectId
+from pydantic import BaseConfig, BaseModel, Field, create_model
 
 
 class InsertModel(BaseModel):
@@ -25,11 +25,9 @@ def ssignature(type: Type):
 
 
 def update_model(insert_model: Type[InsertModel]) -> Type[UpdateModel]:
-    fields = {
-        attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()
-    }
+    fields = {attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()}
     del fields["ctime"]
-    config = insert_model.Config
+    config: Type[BaseConfig] = insert_model.Config
 
     model = create_model(insert_model.__name__, **fields, __config__=config)
     return model
@@ -53,10 +51,10 @@ class PyObjectId(ObjectId):
 
 def read_model(insert_model: Type[InsertModel]) -> Type[ReadModel]:
     fields = {
-        "_id": (PyObjectId, ...),
+        "id": (PyObjectId, ...),
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
     }
-    config = insert_model.Config
+    config: Type[BaseConfig] = insert_model.Config
 
     model = create_model(insert_model.__name__, **fields, __config__=config)
     return model

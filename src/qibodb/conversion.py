@@ -7,12 +7,15 @@ from .dbs import Collection
 from .dbs.models import ReadModel, read_model
 
 
-def documents(objs: tuple[BaseModel]) -> tuple[dict]:
+def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
     """Create insertable documents from models."""
     return tuple(json.loads(obj.json()) for obj in objs)
 
 
-def read_models(docs: tuple[dict], coll: Collection) -> tuple[ReadModel]:
+def read_models(docs: tuple[dict, ...], coll: Collection) -> tuple[ReadModel, ...]:
     """Convert database documents to read models."""
     readcls = read_model(coll.value)
+    for doc in docs:
+        doc["id"] = doc["_id"]
+        del doc["_id"]
     return tuple(readcls(**doc) for doc in docs)

@@ -35,6 +35,7 @@ qibodb = "qibodb.cli:command"
 ipy = "ipython"
 lint = "pylint src --errors-only"
 lint-warnings = "pylint src --exit-zero"
+my = "mypy src/"
 
 [build-system]
 requires = ["poetry-core"]

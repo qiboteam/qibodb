@@ -42,10 +42,11 @@ def identifier(db: Database, coll: Optional[Collection] = None) -> str:
 def _parse_id(identifier: str) -> tuple[str, Optional[str]]:
     """Parse string identifier in its components."""
     elems = identifier.split(".")
+    db = elems[0]
     if len(elems) == 2:
-        return tuple(elems)
+        return (db, elems[1])
     if len(elems) == 1:
-        return (elems[0], None)
+        return (db, None)
     raise ValueError
 
 
