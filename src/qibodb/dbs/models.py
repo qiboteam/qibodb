@@ -1,16 +1,16 @@
 """Base models and dynamic tools."""
 import inspect
 from datetime import datetime
-from typing import NewType, Optional, Type
+from typing import Any, NewType, Optional
 
-from bson import ObjectId
+from bson.objectid import ObjectId
 from pydantic import BaseConfig, BaseModel, Field, create_model
 
 
 class InsertModel(BaseModel):
     ctime: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
+    class Config(BaseConfig):
         frozen = True
 
 
@@ -18,18 +18,30 @@ UpdateModel = NewType("UpdateModel", BaseModel)
 ReadModel = NewType("ReadModel", BaseModel)
 
 
-def ssignature(type: Type):
+def ssignature(type_: type) -> dict[str, Any]:
     """Simplified signature."""
-    signature = inspect.signature(type)
+    signature = inspect.signature(type_)
     return {attr: par.annotation for attr, par in signature.parameters.items()}
 
 
-def update_model(insert_model: Type[InsertModel]) -> Type[UpdateModel]:
+def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
+    return create_model(
+        name,
+        **fields,
+        __config__=config,
+        __base__=BaseModel,
+        __module__=__name__,
+        __validators__={},
+        __cls_kwargs__={},
+    )
+
+
+def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
     fields = {attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()}
     del fields["ctime"]
-    config: Type[BaseConfig] = insert_model.Config
+    config = insert_model.Config
 
-    model = create_model(insert_model.__name__, **fields, __config__=config)
+    model = dynamic_model(insert_model.__name__, config, **fields)
     return model
 
 
@@ -49,12 +61,12 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-def read_model(insert_model: Type[InsertModel]) -> Type[ReadModel]:
+def read_model(insert_model: type[InsertModel]) -> type[ReadModel]:
     fields = {
         "id": (PyObjectId, ...),
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
     }
-    config: Type[BaseConfig] = insert_model.Config
+    config = insert_model.Config
 
-    model = create_model(insert_model.__name__, **fields, __config__=config)
+    model = dynamic_model(insert_model.__name__, config, **fields)
     return model
