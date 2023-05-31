@@ -1,11 +1,11 @@
 """Insert document"""
-import json
 from pathlib import Path
 
 import click
+from rich.pretty import pprint
 
 from .base import command, path
-from .settings import client, vars
+from .settings import client
 from ..dbs import collection
 from ..insert import insert
 
@@ -16,5 +16,4 @@ from ..insert import insert
 def insert_(docs: list[Path], in_: str):
     db, coll = collection(in_)
 
-    contents = [json.loads(p.read_text()) for p in docs]
-    insert(contents, db, coll, client())
+    pprint(insert(docs, db, coll, client()))
