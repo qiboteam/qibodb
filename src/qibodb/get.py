@@ -1,11 +1,11 @@
 """Get existing document."""
 from typing import Optional
 
-from bson import ObjectId
+from bson.objectid import ObjectId
 from pymongo import MongoClient
 
-from .dbs import Database, Collection
-from .dbs.models import ReadModel, read_model
+from .conversion import read_models
+from .dbs import Collection, Database
 
 
 def get(ids: list[str], db: Database, coll: Optional[Collection], client: MongoClient):
@@ -15,13 +15,10 @@ def get(ids: list[str], db: Database, coll: Optional[Collection], client: MongoC
     return get_coll(ids, db, coll, client)
 
 
-def get_db(ids: list[str], db: Database, client: MongoClient) -> tuple[ReadModel]:
-    pass
+def get_db(ids: list[str], db: Database, client: MongoClient):
+    return read_models((), None)
 
 
-def get_coll(
-    ids: list[str], db: Database, coll: Collection, client: MongoClient
-) -> tuple[ReadModel]:
+def get_coll(ids: list[str], db: Database, coll: Collection, client: MongoClient):
     results = [client[db.name][coll.name].find_one({"_id": ObjectId(id)}) for id in ids]
-    readcls = read_model(coll.value)
-    return tuple(readcls(**res) for res in results)
+    return read_models(tuple(results), coll)
