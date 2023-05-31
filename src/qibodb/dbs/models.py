@@ -67,6 +67,7 @@ def read_model(insert_model: type[InsertModel]) -> type[ReadModel]:
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
     }
     config = insert_model.Config
+    config.json_encoders = {ObjectId: str}
 
     model = dynamic_model(insert_model.__name__, config, **fields)
     return model
