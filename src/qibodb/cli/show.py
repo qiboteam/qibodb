@@ -3,11 +3,11 @@
 import click
 from rich.pretty import pprint
 
-from .base import command
-from .settings import client
+from ..conversion import documents
 from ..dbs import collection
 from ..get import get
-from ..insert import documents
+from .base import command
+from .settings import client
 
 
 @command.command("show")
@@ -16,4 +16,4 @@ from ..insert import documents
 def show(ids: list[str], in_: str):
     db, coll = collection(in_)
 
-    pprint(documents(get(ids, db, coll, client())))
+    pprint(documents(get(ids, db, coll, client())), indent_guides=False)
