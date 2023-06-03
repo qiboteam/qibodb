@@ -4,6 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .dbs.bundle import bundle_model
 from .dbs.models import InsertModel, ReadModel, read_model
 
 
@@ -13,15 +14,17 @@ def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
 
 
 def read_models(
-    docs: tuple[Optional[dict], ...], model: type[InsertModel]
+    docs: tuple[Optional[dict], ...], model: type[InsertModel], bundle: bool = False
 ) -> tuple[Optional[ReadModel], ...]:
     """Convert database documents to read models."""
+    if bundle:
+        model = bundle_model(model)
     readcls = read_model(model)
     objs: list[Optional[ReadModel]] = []
 
     for doc in docs:
         if doc is None:
-            objs.append(doc)
+            objs.append(None)
             continue
         doc["id"] = doc["_id"]
         del doc["_id"]
