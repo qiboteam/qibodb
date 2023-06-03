@@ -75,7 +75,8 @@ class PyObjectId(ObjectId):
         yield cls.validate
 
     @classmethod
-    def validate(cls, value):
+    def validate(cls, value: str):
+        """Validate ObjectId with ``bson``."""
         if not ObjectId.is_valid(value):
             raise ValueError("Invalid objectid")
         return ObjectId(value)

@@ -24,6 +24,7 @@ settings = Settings()
 
 
 def variables(settings_: Settings):
+    """Report available variables from given settings."""
     return {
         f"{settings_.Config.env_prefix}{k}".upper(): v
         for k, v in settings_.dict().items()
@@ -31,4 +32,13 @@ def variables(settings_: Settings):
 
 
 def client():
+    """Return a new MongoDB client instance.
+
+    The instance is configured with globally available settings.
+
+    See also
+    --------
+    :data:`settings`
+
+    """
     return MongoClient(settings.host, settings.qibo_port)

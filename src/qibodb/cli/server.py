@@ -17,6 +17,7 @@ _logger = logging.getLogger(__name__)
 
 
 def podman_exe():
+    """Locate podman executable."""
     path_ = shutil.which("podman")
     if path_ is None:
         raise FileNotFoundError()
@@ -25,6 +26,7 @@ def podman_exe():
 
 
 def podman(subcommand: str):
+    """Run podman command."""
     args = [podman_exe()] + subcommand.split(" ")
     _logger.info(" ".join(args))
     subprocess.run(args, check=True)
@@ -58,11 +60,13 @@ def initdb(data: Path):
 
 
 def startdb():
+    """Restart the container."""
     container = settings.container_name
     podman(f"start {container}")
 
 
 def stopdb():
+    """Stop the container."""
     container = settings.container_name
     podman(f"stop {container}")
 

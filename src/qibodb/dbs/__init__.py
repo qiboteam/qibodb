@@ -69,3 +69,8 @@ def collection(identifier_: str) -> tuple[Database, Collection]:
     coll = db.value[collname.upper()] if collname is not None else db.value.default()
 
     return (db, coll)
+
+
+IDENTIFIER_DESCR = (
+    "<database.collection>, or just <database> for the default collection"
+)
