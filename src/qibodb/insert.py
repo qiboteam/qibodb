@@ -66,17 +66,16 @@ def bundle(paths: list[Path], db: Database, coll: Collection, client: MongoClien
     """Insert document in bundle collection."""
     objs = tuple(coll.value.parse_file(doc) for doc in paths)
 
-    dbcolls = collections(db.value)
-
     # insert elements, and collect references
     docs = []
     for obj in objs:
         ref, template = extract(obj)
         for value, type_, name, cat in ref:
-            elcoll = dbcolls[type_]
+            elcoll = collections(db.value)[type_]
             element(name, value, cat, template, client[db.name.lower()][elcoll.lower()])
         docs.append(template)
 
+    # insert the actual bundle
     docs_ = tuple(docs)
     client[db.name.lower()][coll.name.lower()].insert_many(docs_)
 

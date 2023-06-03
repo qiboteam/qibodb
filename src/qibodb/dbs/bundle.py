@@ -20,6 +20,11 @@ from .models import InsertModel, dynamic_model, ssignature
 
 @cache
 def collections(db: type[Enum]):
+    """Reverse index for collections in database.
+
+    From the object to the collection name.
+
+    """
     return {var.value: var.name for var in db}
 
 
@@ -97,6 +102,7 @@ class PyDBRef(DBRef):
 
 
 def bundle_model(insert_model: type[InsertModel]) -> type[BundleModel]:
+    """Derive a model with references, from the elements-embedding one."""
     fields = {}
     for attr, ann in ssignature(insert_model).items():
         if attr == "ctime":
