@@ -13,6 +13,11 @@ class ResonatorType(Enum):
     dim3 = "3D"
 
 
+class Settings(InsertModel):
+    sampling_rate: int
+    repetition_duration: int
+
+
 class QPU(InsertModel):
     description: str
     qubits: list[QubitId]
@@ -20,7 +25,4 @@ class QPU(InsertModel):
 
     resonator_type: ResonatorType
 
-
-class QPUCalibration(InsertModel):
-    sampling_rate: int
-    repetition_duration: int
+    settings: Settings
