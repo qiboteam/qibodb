@@ -1,5 +1,12 @@
 """Track Qibolab versions."""
+from datetime import datetime
+from typing import NewType
+
+from pydantic import Field
+
 from ..models import InsertModel
+
+Version = NewType("Version", str)
 
 
 class Qibolab(InsertModel):
@@ -9,4 +16,5 @@ class Qibolab(InsertModel):
 
     """
 
-    version: str
+    version: Version
+    supersedes: list[tuple[Version, datetime]] = Field(default=[])
