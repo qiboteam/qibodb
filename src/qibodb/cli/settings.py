@@ -21,10 +21,10 @@ settings = Settings()
 """Global settings instance (CLI runs are one-shot)."""
 
 
-def vars(settings: Settings):
+def variables(settings_: Settings):
     return {
-        f"{settings.Config.env_prefix}{k}".upper(): v
-        for k, v in settings.dict().items()
+        f"{settings_.Config.env_prefix}{k}".upper(): v
+        for k, v in settings_.dict().items()
     }
 
 

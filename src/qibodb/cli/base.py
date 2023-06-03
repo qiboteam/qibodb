@@ -3,7 +3,7 @@ from pathlib import Path
 
 import click
 
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
 
 def path(**kwargs):

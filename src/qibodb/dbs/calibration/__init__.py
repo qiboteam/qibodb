@@ -4,4 +4,6 @@ from .package import Qibocal
 
 
 class Collection(Schema):
-    package = Qibocal
+    # pylint: disable=invalid-enum-extension
+    # https://github.com/pylint-dev/pylint/issues/6887
+    PACKAGE = Qibocal

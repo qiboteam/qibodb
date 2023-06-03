@@ -37,7 +37,9 @@ def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
 
 
 def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
-    fields = {attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()}
+    fields = {
+        attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()
+    }
     del fields["ctime"]
     config = insert_model.Config
 
@@ -51,10 +53,10 @@ class PyObjectId(ObjectId):
         yield cls.validate
 
     @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
+    def validate(cls, value):
+        if not ObjectId.is_valid(value):
             raise ValueError("Invalid objectid")
-        return ObjectId(v)
+        return ObjectId(value)
 
     @classmethod
     def __modify_schema__(cls, field_schema):

@@ -8,8 +8,8 @@ from . import calibration, laboratory
 class Database(Enum):
     """Available databases."""
 
-    platform = laboratory.Collection
-    procedure = calibration.Collection
+    PLATFORM = laboratory.Collection
+    PROCEDURE = calibration.Collection
 
     @classmethod
     def collections(cls):
@@ -39,9 +39,9 @@ def identifier(db: Database, coll: Optional[Collection] = None) -> str:
     return f"{db.name}.{coll.name}"
 
 
-def _parse_id(identifier: str) -> tuple[str, Optional[str]]:
+def _parse_id(identifier_: str) -> tuple[str, Optional[str]]:
     """Parse string identifier in its components."""
-    elems = identifier.split(".")
+    elems = identifier_.split(".")
     db = elems[0]
     if len(elems) == 2:
         return (db, elems[1])
@@ -50,7 +50,7 @@ def _parse_id(identifier: str) -> tuple[str, Optional[str]]:
     raise ValueError
 
 
-def collection(identifier: str) -> tuple[Database, Collection]:
+def collection(identifier_: str) -> tuple[Database, Collection]:
     """Infer collection from name.
 
     For example::
@@ -62,9 +62,9 @@ def collection(identifier: str) -> tuple[Database, Collection]:
         (Database.platform, None)
 
     """
-    dbname, collection = _parse_id(identifier)
+    dbname, collname = _parse_id(identifier_)
 
-    db = Database[dbname]
-    coll = db.value[collection] if collection else db.value.default()
+    db = Database[dbname.upper()]
+    coll = db.value[collname.upper()] if collname is not None else db.value.default()
 
     return (db, coll)

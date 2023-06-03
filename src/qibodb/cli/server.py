@@ -1,7 +1,7 @@
-from pathlib import Path
 import logging
 import shutil
 import subprocess
+from pathlib import Path
 
 import click
 
@@ -12,17 +12,17 @@ _logger = logging.getLogger(__name__)
 
 
 def podman_exe():
-    path = shutil.which("podman")
-    if path is None:
+    path_ = shutil.which("podman")
+    if path_ is None:
         raise FileNotFoundError()
 
-    return path
+    return path_
 
 
-def podman(command: str):
-    args = [podman_exe()] + command.split(" ")
+def podman(subcommand: str):
+    args = [podman_exe()] + subcommand.split(" ")
     _logger.info(" ".join(args))
-    subprocess.run(args)
+    subprocess.run(args, check=True)
 
 
 def initdb(data: Path):

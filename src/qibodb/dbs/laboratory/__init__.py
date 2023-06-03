@@ -11,9 +11,11 @@ class Platform(InsertModel):
 
 
 class Collection(Schema):
-    qpu = QPU
-    package = Qibolab
-    platform = Platform
+    # pylint: disable=invalid-enum-extension
+    # https://github.com/pylint-dev/pylint/issues/6887
+    QPU = QPU
+    PACKAGE = Qibolab
+    PLATFORM = Platform
 
-    __bundles__ = ["platform"]
-    __default__ = "platform"
+    __bundles__ = ["PLATFORM"]
+    __default__ = "PLATFORM"

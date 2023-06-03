@@ -5,7 +5,7 @@ import rich.padding
 from rich.table import Table
 
 from .base import command
-from .settings import settings, vars
+from .settings import settings, variables
 
 
 @command.group("info")
@@ -20,7 +20,7 @@ def settings_():
     table.add_column("Name", style="magenta")
     table.add_column("Resolved value", style="cyan", justify="center")
 
-    for name, value in vars(settings).items():
+    for name, value in variables(settings).items():
         table.add_row(name, str(value))
 
     rich.print(rich.padding.Padding(table, (1, 5)))

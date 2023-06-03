@@ -9,8 +9,8 @@ Topology = list[tuple[QubitId, QubitId]]
 
 
 class ResonatorType(Enum):
-    dim2 = "2D"
-    dim3 = "3D"
+    DIM2 = "2D"
+    DIM3 = "3D"
 
 
 class Settings(InsertModel):
