@@ -34,6 +34,7 @@ def _dropid(doc: Optional[dict]):
 
 
 def element(value: Any, db: pymongo.database.Database):
+    """Retrieve referenced element from its collection."""
     cat = ElementCategory.from_hint(type(value))
 
     if cat is ElementCategory.SCALAR:
@@ -42,6 +43,8 @@ def element(value: Any, db: pymongo.database.Database):
         return [_dropid(db.dereference(ref)) for ref in value]
     if cat is ElementCategory.DICT:
         return {name: _dropid(db.dereference(ref)) for name, ref in value.items()}
+
+    raise ValueError
 
 
 def bundle(ids: list[str], db: Database, coll: Collection, client: MongoClient):
