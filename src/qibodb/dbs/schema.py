@@ -27,11 +27,9 @@ class Schema(Enum):
     def is_bundle(cls, collection) -> bool:
         """Determine if the given collection is a bundle.
 
-        A *bundle* is just an internal name for a document only consisting of
-        references to documents in other collections.
-
-        It is the only allowed mechanism to introduce relations among
-        documents.
+        See also
+        --------
+        :mod:`qibodb.dbs.bundle` for *bundle* definition.
 
         """
         return collection.name in cls.__bundles__

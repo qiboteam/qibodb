@@ -1,3 +1,8 @@
+"""Manage a database server instance in a container.
+
+Requires ``podman`` to be installed.
+
+"""
 import logging
 import shutil
 import subprocess

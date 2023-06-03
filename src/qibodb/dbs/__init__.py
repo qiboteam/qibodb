@@ -1,3 +1,4 @@
+"""Define the common and specific structure of databases."""
 from enum import Enum
 from itertools import chain
 from typing import Optional, Union
