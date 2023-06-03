@@ -1,14 +1,19 @@
 """Platform supporting hardware execution."""
-from enum import Enum
-
-from .instrument import Instrument, InstrumentCalibration
+from ..models import InsertModel
+from ..schema import Schema
 from .package import Qibolab
-from .qpu import QPU, QPUCalibration
+from .qpu import QPU
 
 
-class Collection(Enum):
+class Platform(InsertModel):
+    qpu: QPU
+    package: Qibolab
+
+
+class Collection(Schema):
     qpu = QPU
-    qpuconfig = QPUCalibration
-    instrument = Instrument
-    instrconfig = InstrumentCalibration
     package = Qibolab
+    platform = Platform
+
+    __bundles__ = ["platform"]
+    __default__ = "platform"

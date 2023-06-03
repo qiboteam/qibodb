@@ -1,7 +1,7 @@
 """Calibration procedure."""
-from enum import Enum
-
+from ..schema import Schema
 from .package import Qibocal
 
-class Collection(Enum):
+
+class Collection(Schema):
     package = Qibocal

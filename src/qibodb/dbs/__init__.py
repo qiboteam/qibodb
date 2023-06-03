@@ -50,7 +50,7 @@ def _parse_id(identifier: str) -> tuple[str, Optional[str]]:
     raise ValueError
 
 
-def collection(identifier: str) -> tuple[Database, Optional[Collection]]:
+def collection(identifier: str) -> tuple[Database, Collection]:
     """Infer collection from name.
 
     For example::
@@ -65,6 +65,6 @@ def collection(identifier: str) -> tuple[Database, Optional[Collection]]:
     dbname, collection = _parse_id(identifier)
 
     db = Database[dbname]
-    coll = db.value[collection] if collection else None
+    coll = db.value[collection] if collection else db.value.default()
 
     return (db, coll)
