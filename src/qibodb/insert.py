@@ -1,4 +1,5 @@
 """Insert new document."""
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -73,6 +74,7 @@ def bundle(paths: list[Path], db: Database, coll: Collection, client: MongoClien
         for value, type_, name, cat in ref:
             elcoll = collections(db.value)[type_]
             element(name, value, cat, template, client[db.name.lower()][elcoll.lower()])
+        template["ctime"] = datetime.utcnow()
         docs.append(template)
 
     # insert the actual bundle

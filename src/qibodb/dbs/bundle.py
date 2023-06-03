@@ -106,6 +106,7 @@ def bundle_model(insert_model: type[InsertModel]) -> type[BundleModel]:
     fields = {}
     for attr, ann in ssignature(insert_model).items():
         if attr == "ctime":
+            fields[attr] = (ann, ...)
             continue
 
         cat = ElementCategory.from_hint(ann)
