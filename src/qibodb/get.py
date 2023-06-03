@@ -8,17 +8,22 @@ from .conversion import read_models
 from .dbs import Collection, Database
 
 
-def get(ids: list[str], db: Database, coll: Optional[Collection], client: MongoClient):
-    if coll is None:
-        return get_db(ids, db, client)
+def get(ids: list[str], db: Database, coll: Collection, client: MongoClient):
+    """Retrieve document from collection."""
+    _get = get_bundle if db.value.is_bundle(coll) else get_coll
 
-    return get_coll(ids, db, coll, client)
-
-
-def get_db(ids: list[str], db: Database, client: MongoClient):
-    return read_models((), None)
+    return _get(ids, db, coll, client)
 
 
 def get_coll(ids: list[str], db: Database, coll: Collection, client: MongoClient):
-    results: list[Optional[dict]] = [client[db.name][coll.name].find_one({"_id": ObjectId(id)}) for id in ids]
+    """Retrieve document from simple collection."""
+    results: list[Optional[dict]] = [
+        client[db.name.lower()][coll.name.lower()].find_one({"_id": ObjectId(id)})
+        for id in ids
+    ]
     return read_models(tuple(results), coll.value)
+
+
+def get_bundle(ids: list[str], db: Database, coll: Collection, client: MongoClient):
+    """Retrieve document from bundle collection."""
+    return get_coll(ids, db, coll, client)
