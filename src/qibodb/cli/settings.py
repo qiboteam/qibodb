@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     container_image = "docker.io/library/mongo:latest"
 
     class Config:
+        """Pydantic settings configurations."""
+
         env_prefix = "qibodb_"
 
 

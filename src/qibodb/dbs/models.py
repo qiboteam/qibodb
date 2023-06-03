@@ -8,9 +8,18 @@ from pydantic import BaseConfig, BaseModel, Field, create_model
 
 
 class InsertModel(BaseModel):
+    """Base class for insertion models.
+
+    Models inheriting from this class are supposed to be used to insert new
+    documents in the database.
+
+    """
+
     ctime: datetime = Field(default_factory=datetime.utcnow)
 
     class Config(BaseConfig):
+        """Pydantic model configurations."""
+
         frozen = True
 
 
@@ -25,6 +34,12 @@ def ssignature(type_: type) -> dict[str, Any]:
 
 
 def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
+    """Help creating a Pydantic model dynamically.
+
+    Essentially, prefills available kwargs, in order to enable the static
+    analyzer to confirm that ``fields`` will not accidentally span them.
+
+    """
     return create_model(
         name,
         **fields,
@@ -37,6 +52,7 @@ def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
 
 
 def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
+    """Derive an update model from the corresponding insert one."""
     fields = {
         attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()
     }
@@ -48,6 +64,12 @@ def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
 
 
 class PyObjectId(ObjectId):
+    """A Pydantic representation of a MongoDB ObjectId.
+
+    https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
+
+    """
+
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -64,6 +86,7 @@ class PyObjectId(ObjectId):
 
 
 def read_model(insert_model: type[InsertModel]) -> type[ReadModel]:
+    """Derive a read model from the corresponding insert one."""
     fields = {
         "id": (PyObjectId, ...),
         **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
