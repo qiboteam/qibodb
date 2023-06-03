@@ -12,7 +12,9 @@ def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
     return tuple(json.loads(obj.json()) for obj in objs)
 
 
-def read_models(docs: tuple[Optional[dict], ...], model: type[InsertModel]) -> tuple[Optional[ReadModel], ...]:
+def read_models(
+    docs: tuple[Optional[dict], ...], model: type[InsertModel]
+) -> tuple[Optional[ReadModel], ...]:
     """Convert database documents to read models."""
     readcls = read_model(model)
     objs: list[Optional[ReadModel]] = []
