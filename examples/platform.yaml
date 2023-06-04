@@ -1,0 +1,116 @@
+qpu:
+  description: QuantWare 25-qubit device with 4 witness removed. qw25q_v3_e10
+
+  settings:
+    nshots: 1024
+    sampling_rate: 1000000000
+    relaxation_time: 100_000
+
+  topology:
+    [
+      [A1, A2],
+      [A1, A3],
+      [A1, D5],
+      [A2, A4],
+      [A3, A4],
+      [A3, A6],
+      [A3, D4],
+      [A4, A5],
+      [A6, B3],
+      [A6, C3],
+      [A6, D3],
+      [B1, B2],
+      [B1, B3],
+      [B2, B4],
+      [B3, B4],
+      [B4, B5],
+      [B4, C3],
+      [B5, C1],
+      [C1, C2],
+      [C1, C3],
+      [C2, C4],
+      [C3, C4],
+      [C5, D1],
+      [D1, D2],
+      [D1, D3],
+      [D2, D4],
+      [D3, D4],
+      [D4, D5],
+    ]
+
+  resonator_type: 2D
+
+  qubits:
+    A1:
+      native_gates:
+        RX:
+          duration: 40
+          amplitude: 0.09060625
+          frequency: 5063039565
+          shape: Gaussian(5)
+          type: qd # qubit drive
+          start: 0
+          phase: 0
+        MZ:
+          duration: 1000
+          amplitude: 0.002
+          frequency: 6_885_351_885
+          shape: Rectangular()
+          type: ro # readout
+          start: 0
+          phase: 0
+      characterization:
+        readout_frequency: 6886009383
+        drive_frequency: 5.06217e+9
+        T1: 0.0
+        T2: 0.0
+        sweetspot: 0
+        filter: {}
+        # parameters for single shot classification
+        threshold: 0.000288842361133913
+        iq_angle: 0.3303038506310445
+
+        # required for mixers (not sure if it should be here)
+        mixer:
+          drive_g: 0.0
+          drive_phi: 0.0
+          readout_g: 0.0
+          readout_phi: 0.0
+    A2:
+      native_gates:
+        RX:
+          duration: 40
+          amplitude: 0.3229
+          frequency: 5846525399
+          shape: Gaussian(5)
+          type: qd # qubit drive
+          start: 0
+          phase: 0
+        MZ:
+          duration: 1000
+          amplitude: 0.004
+          frequency: 7.266974e+9
+          shape: Rectangular()
+          type: ro # readout
+          start: 0
+          phase: 0
+      characterization:
+        readout_frequency: 7267518645
+        drive_frequency: 5.8513e+9
+        T1: 0.0
+        T2: 0.0
+        sweetspot: -0.48
+        filter: {}
+        # parameters for single shot classification
+        threshold: 0.00031560006787954647
+        iq_angle: 1.9919151514426674
+
+        # required for mixers (not sure if it should be here)
+        mixer:
+          drive_g: 0.0
+          drive_phi: 0.0
+          readout_g: 0.0
+          readout_phi: 0.0
+
+package:
+  version: main

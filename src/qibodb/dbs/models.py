@@ -1,0 +1,111 @@
+"""Base models and dynamic tools."""
+import inspect
+from datetime import datetime
+from typing import Any, Optional, cast
+
+from bson.objectid import ObjectId
+from pydantic import BaseConfig, BaseModel, Field, create_model
+
+
+class InsertModel(BaseModel):
+    """Base class for insertion models.
+
+    Models inheriting from this class are supposed to be used to insert new
+    documents in the database.
+
+    """
+
+    ctime: datetime = Field(default_factory=datetime.utcnow)
+
+    __unique__: list[str] = []
+
+    class Config(BaseConfig):
+        """Pydantic model configurations."""
+
+        frozen = True
+
+
+class UpdateModel(BaseModel):
+    """Base class for update models."""
+
+
+class ReadModel(BaseModel):
+    """Base class for read models."""
+
+
+def ssignature(type_: type) -> dict[str, Any]:
+    """Simplified signature."""
+    signature = inspect.signature(type_)
+    return {attr: par.annotation for attr, par in signature.parameters.items()}
+
+
+def dynamic_model(name: str, config: type[BaseConfig], **fields: Any):
+    """Help creating a Pydantic model dynamically.
+
+    Essentially, prefills available kwargs, in order to enable the static
+    analyzer to confirm that ``fields`` will not accidentally span them.
+
+    """
+    return create_model(
+        name,
+        **fields,
+        __config__=config,
+        __base__=None,
+        __module__=__name__,
+        __validators__={},
+        __cls_kwargs__={},
+    )
+
+
+def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
+    """Derive an update model from the corresponding insert one."""
+    fields = {
+        attr: (Optional[ann], None) for attr, ann in ssignature(insert_model).items()
+    }
+    del fields["ctime"]
+    config = insert_model.Config
+
+    model = cast(
+        type[UpdateModel],
+        dynamic_model(insert_model.__name__, config, **fields),
+    )
+    return model
+
+
+class PyObjectId(ObjectId):
+    """A Pydantic representation of a MongoDB ObjectId.
+
+    https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
+
+    """
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value: str):
+        """Validate ObjectId with ``bson``."""
+        if not ObjectId.is_valid(value):
+            raise ValueError("Invalid objectid")
+        return ObjectId(value)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+
+def read_model(insert_model: type[InsertModel]) -> type[ReadModel]:
+    """Derive a read model from the corresponding insert one."""
+    fields = {
+        "id": (PyObjectId, ...),
+        **{attr: (ann, ...) for attr, ann in ssignature(insert_model).items()},
+    }
+    config = insert_model.Config
+    config.json_encoders = {**insert_model.Config.json_encoders, **{ObjectId: str}}
+
+    model = cast(
+        type[ReadModel],
+        dynamic_model(insert_model.__name__, config, **fields),
+    )
+    return model
