@@ -852,6 +852,17 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
 test = ["argcomplete (>=2.0)", "pre-commit", "pytest", "pytest-mock"]
 
 [[package]]
+name = "types-pyyaml"
+version = "6.0.12.10"
+description = "Typing stubs for PyYAML"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-PyYAML-6.0.12.10.tar.gz", hash = "sha256:ebab3d0700b946553724ae6ca636ea932c1b0868701d4af121630e78d695fc97"},
+    {file = "types_PyYAML-6.0.12.10-py3-none-any.whl", hash = "sha256:662fa444963eff9b68120d70cda1af5a5f2aa57900003c2006d7626450eaae5f"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.6.2"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -973,4 +984,4 @@ cli = ["click", "rich"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "259e198f7954be2ffd335537103359e328e0cbe2c7f62586ad3244944a9c6fd8"
+content-hash = "790d6d29c5e3a4daa20961783dcd0373244a3b4e576af1fc0af0cdd44f516cf2"

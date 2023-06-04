@@ -21,13 +21,13 @@ def insert(docs: list[dict], db: Database, coll: Collection, client: MongoClient
 def collection(docs: list[dict], db: Database, coll: Collection, client: MongoClient):
     """Insert document in simple collection."""
     # Validate the documents
-    objs = tuple(coll.value(**doc) for doc in docs)
-    docs_ = documents(objs)
+    validated = tuple(coll.value(**doc) for doc in docs)
+    dbdocs = documents(validated)
 
     # actually insert
-    _ = client[db.name.lower()][coll.name.lower()].insert_many(docs)
+    _ = client[db.name.lower()][coll.name.lower()].insert_many(dbdocs)
 
-    return read_models(docs_, coll.value)
+    return read_models(dbdocs, coll.value)
 
 
 def element(
@@ -64,20 +64,20 @@ def element(
 
 def bundle(docs: list[dict], db: Database, coll: Collection, client: MongoClient):
     """Insert document in bundle collection."""
-    objs = tuple(coll.value(**doc) for doc in docs)
+    validated = tuple(coll.value(**doc) for doc in docs)
 
     # insert elements, and collect references
-    docs_ = []
-    for obj in objs:
+    dbdocs = []
+    for obj in validated:
         ref, template = extract(obj)
         for value, type_, name, cat in ref:
             elcoll = collections(db.value)[type_]
             element(name, value, cat, template, client[db.name.lower()][elcoll.lower()])
         template["ctime"] = datetime.utcnow()
-        docs_.append(template)
+        dbdocs.append(template)
 
     # insert the actual bundle
-    docs_ = tuple(docs_)
-    client[db.name.lower()][coll.name.lower()].insert_many(docs_)
+    dbdocs_ = tuple(dbdocs)
+    client[db.name.lower()][coll.name.lower()].insert_many(dbdocs_)
 
-    return read_models(docs_, coll.value, bundle=True)
+    return read_models(dbdocs_, coll.value, bundle=True)
