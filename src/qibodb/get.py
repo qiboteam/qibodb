@@ -54,7 +54,7 @@ def bundle(ids: list[str], db: Database, coll: Collection, client: MongoClient):
         for id in ids
     ]
 
-    docs = []
+    docs: list[Optional[dict]] = []
     for res in results:
         if res is None:
             docs.append(None)

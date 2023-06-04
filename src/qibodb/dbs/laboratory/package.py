@@ -17,4 +17,6 @@ class Qibolab(InsertModel):
     """
 
     version: Version
-    supersedes: list[tuple[Version, datetime]] = Field(default=[])
+    compatible: list[tuple[Version, datetime]] = Field(default=[])
+
+    __unique__ = []

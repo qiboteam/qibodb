@@ -1,6 +1,6 @@
 """Convert among formats."""
 import json
-from typing import Optional
+from typing import Optional, TypeVar
 
 from pydantic import BaseModel
 
@@ -11,6 +11,14 @@ from .dbs.models import InsertModel, ReadModel, read_model
 def documents(objs: tuple[BaseModel, ...]) -> tuple[dict, ...]:
     """Create insertable documents from models."""
     return tuple(json.loads(obj.json()) for obj in objs)
+
+
+Elem = TypeVar("Elem")
+
+
+def notnull(elems: tuple[Optional[Elem], ...]) -> tuple[Elem, ...]:
+    """Filter out null elements."""
+    return tuple(el for el in elems if el is not None)
 
 
 def read_models(

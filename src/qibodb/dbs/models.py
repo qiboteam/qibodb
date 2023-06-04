@@ -1,7 +1,7 @@
 """Base models and dynamic tools."""
 import inspect
 from datetime import datetime
-from typing import Any, NewType, Optional
+from typing import Any, Optional, cast
 
 from bson.objectid import ObjectId
 from pydantic import BaseConfig, BaseModel, Field, create_model
@@ -17,14 +17,20 @@ class InsertModel(BaseModel):
 
     ctime: datetime = Field(default_factory=datetime.utcnow)
 
+    __unique__: list[str] = []
+
     class Config(BaseConfig):
         """Pydantic model configurations."""
 
         frozen = True
 
 
-UpdateModel = NewType("UpdateModel", BaseModel)
-ReadModel = NewType("ReadModel", BaseModel)
+class UpdateModel(BaseModel):
+    """Base class for update models."""
+
+
+class ReadModel(BaseModel):
+    """Base class for read models."""
 
 
 def ssignature(type_: type) -> dict[str, Any]:
@@ -59,7 +65,10 @@ def update_model(insert_model: type[InsertModel]) -> type[UpdateModel]:
     del fields["ctime"]
     config = insert_model.Config
 
-    model = dynamic_model(insert_model.__name__, config, **fields)
+    model = cast(
+        type[UpdateModel],
+        dynamic_model(insert_model.__name__, config, **fields),
+    )
     return model
 
 
@@ -95,5 +104,8 @@ def read_model(insert_model: type[InsertModel]) -> type[ReadModel]:
     config = insert_model.Config
     config.json_encoders = {**insert_model.Config.json_encoders, **{ObjectId: str}}
 
-    model = dynamic_model(insert_model.__name__, config, **fields)
+    model = cast(
+        type[ReadModel],
+        dynamic_model(insert_model.__name__, config, **fields),
+    )
     return model

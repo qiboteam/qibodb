@@ -3,7 +3,7 @@
 import click
 from rich import print_json
 
-from ..conversion import documents
+from ..conversion import documents, notnull
 from ..dbs import IDENTIFIER_DESCR, collection
 from ..get import get
 from .base import command
@@ -17,4 +17,4 @@ def show(ids: list[str], in_: str):
     """Show document in database collection."""
     db, coll = collection(in_)
 
-    print_json(data=documents(get(ids, db, coll, client())))
+    print_json(data=documents(notnull(get(ids, db, coll, client()))))

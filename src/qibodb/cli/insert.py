@@ -4,7 +4,7 @@ from pathlib import Path
 import click
 from rich import print_json
 
-from ..conversion import documents
+from ..conversion import documents, notnull
 from ..dbs import IDENTIFIER_DESCR, collection
 from ..insert import insert
 from .base import command, path
@@ -18,4 +18,4 @@ def insert_(docs: list[Path], in_: str):
     """Insert document in database collection."""
     db, coll = collection(in_)
 
-    print_json(data=documents(insert(docs, db, coll, client())))
+    print_json(data=documents(notnull(insert(docs, db, coll, client()))))

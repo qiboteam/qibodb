@@ -10,7 +10,7 @@ documents.
 import inspect
 from enum import Enum, auto
 from functools import cache
-from typing import Any, NewType, get_args, get_origin
+from typing import Any, cast, get_args, get_origin
 
 from bson.dbref import DBRef
 from bson.objectid import ObjectId
@@ -76,7 +76,8 @@ def extract(bundle: InsertModel):
     return (referenced, template)
 
 
-BundleModel = NewType("ReadModel", InsertModel)
+class BundleModel(InsertModel):
+    """Base class for bundle models."""
 
 
 class PyDBRef(DBRef):
@@ -123,5 +124,8 @@ def bundle_model(insert_model: type[InsertModel]) -> type[BundleModel]:
     config = insert_model.Config
     config.json_encoders = {DBRef: lambda ref: [ref.collection, ref.id]}
 
-    model = dynamic_model(insert_model.__name__, config, **fields)
+    model = cast(
+        type[BundleModel],
+        dynamic_model(insert_model.__name__, config, **fields),
+    )
     return model
