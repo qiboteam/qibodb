@@ -116,7 +116,9 @@ def bundle_model(insert_model: type[InsertModel]) -> type[BundleModel]:
         elif cat is ElementCategory.LIST:
             fields[attr] = (list[PyDBRef], ...)
         elif cat is ElementCategory.DICT:
-            keytype = get_args(ann)[0]
+            # runtime usage of type hints: use `Any` to tell mypy this should
+            # not be checked
+            keytype: Any = get_args(ann)[0]
             fields[attr] = (dict[keytype, PyDBRef], ...)
         else:
             raise ValueError
